@@ -1,0 +1,24 @@
+name: Check style/lint and Run Tests
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  check_test_all:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
+
+      - name: Install project
+        run: uv sync
+
+      - name: Run checks/tests
+        run: make check-test-all
