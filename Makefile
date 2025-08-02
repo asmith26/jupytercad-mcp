@@ -29,3 +29,7 @@ package-build:                                   ## Build Python package
 
 package-publish:                                 ## Publish Python package to PyPI
 	uv publish
+
+# === CUSTOM COMMANDS ===
+mcp-inspector:
+	npx @modelcontextprotocol/inspector uv run python src/jupytercad_mcp/server.py
