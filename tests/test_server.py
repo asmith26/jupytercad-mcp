@@ -82,6 +82,8 @@ async def test_expose_method_signature_real_method():
     assert "height" in sig.parameters
     assert sig.parameters["path"].annotation == str
     assert sig.parameters["length"].annotation == float
+    assert "Warning: This tool will update the JCAD document" in wrapped_add_box.__doc__
+    assert CadDocument.add_box.__doc__ in wrapped_add_box.__doc__
 
 
 @patch("jupytercad_mcp.server.argparse.ArgumentParser")
