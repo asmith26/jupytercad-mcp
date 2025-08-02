@@ -12,3 +12,4 @@ wheels/
 .idea
 mlruns
 mlartifacts
+.coverage

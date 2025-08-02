@@ -1,11 +1,10 @@
 import argparse
 import inspect
 from functools import wraps
-from typing import get_type_hints
+from typing import Any, Callable, Type, get_type_hints
 
-from mcp.server.fastmcp import FastMCP
 from jupytercad import CadDocument
-
+from mcp.server.fastmcp import FastMCP
 
 mcp = FastMCP(name="JupyterCAD MCP Server")
 
@@ -23,17 +22,12 @@ def get_current_cad_design(path: str) -> str:
         return f.read()
 
 
-def expose_method(cls, method_name):
-    """ Exposes """
+def expose_method(cls: Type[Any], method_name: str) -> Callable[..., Any]:
+    """Expose a method of a class as an MCP tool."""
     method = getattr(cls, method_name)
 
     @wraps(method)
-    def _wrapper(path, **kwargs):
-        f"""{method.__doc__}
-
-        Warning: This tool will update the JCAD document at the given path.
-        To understand the current state of the document, you MUST first use the 'get_current_cad_design' tool.
-        """
+    def _wrapper(path: str, **kwargs: Any) -> None:
         # Load current .jcad document
         doc = CadDocument.load(path)
 
@@ -43,18 +37,28 @@ def expose_method(cls, method_name):
         # Write updates to the same filepath
         doc.save(path)
 
+    _wrapper.__doc__ = f"""{method.__doc__}
+
+        Warning: This tool will update the JCAD document at the given path.
+        To understand the current state of the document, you MUST first use the 'get_current_cad_design' tool.
+        """
+
     # Remove 'self' from signature
     type_hints = get_type_hints(method, globalns=method.__globals__)
     orig_sig = inspect.signature(method)
-    new_params = [param.replace(annotation=type_hints.get(param.name, param.annotation)) for param in
-                  orig_sig.parameters.values() if param.name != 'self']
+    new_params = [
+        param.replace(annotation=type_hints.get(param.name, param.annotation))
+        for param in orig_sig.parameters.values()
+        if param.name != "self"
+    ]
 
     # Add 'path' to signature
-    path_param = inspect.Parameter('path', inspect.Parameter.POSITIONAL_OR_KEYWORD, annotation=str)
+    path_param = inspect.Parameter("path", inspect.Parameter.POSITIONAL_OR_KEYWORD, annotation=str)
     new_params.insert(0, path_param)
-
-    _wrapper.__signature__ = orig_sig.replace(parameters=new_params,
-                                              return_annotation=inspect.Signature.empty)  # remove return type (to prevent pydantic errors)
+    _wrapper.__signature__ = orig_sig.replace(  # type: ignore
+        parameters=new_params,
+        return_annotation=inspect.Signature.empty,  # remove return type (to prevent pydantic errors)
+    )
 
     # Register it with MCP
     tool_fn = mcp.tool()(_wrapper)
@@ -83,7 +87,7 @@ expose_method(cls=CadDocument, method_name="set_visible")  # todo add docstring?
 expose_method(cls=CadDocument, method_name="set_color")  # todo add docstring?
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(description="Start an MCP server for JupyterCAD.")
     parser.add_argument(
         "transport",
