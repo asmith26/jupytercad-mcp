@@ -20,31 +20,7 @@ To use [`streamable-http`](https://modelcontextprotocol.io/specification/2025-06
 uvx --with jupytercad-mcp jupytercad-mcp streamable-http
 ```
 
-### Tools
-
-The following tools are available:
-
-- **get_current_cad_design**: Read the current content of a document (helpful for understanding the current state of a
-  JCAD file before modifying it).
-- **remove**: Remove an object from the document.
-- **rename**: Rename an object in the document.
-- **add_annotation**: Add an annotation to the document.
-- **remove_annotation**: Remove an annotation from the document.
-- **add_occ_shape**: Add an OpenCascade TopoDS shape to the document.
-- **add_box**: Add a box to the document.
-- **add_cone**: Add a cone to the document.
-- **add_cylinder**: Add a cylinder to the document.
-- **add_sphere**: Add a sphere to the document.
-- **add_torus**: Add a torus to the document.
-- **cut**: Apply a cut boolean operation between two objects.
-- **fuse**: Apply a union boolean operation between two objects.
-- **intersect**: Apply an intersection boolean operation between two objects.
-- **chamfer**: Apply a chamfer operation on an object.
-- **fillet**: Apply a fillet operation on an object.
-- **set_visible**: Sets the visibility of an object.
-- **set_color**: Sets the color of an object.
-
-## Example
+### Example
 
 An example at [examples/openai_agents_client.py](examples/openai_agents_client.py) has been created using the 
 [OpenAI Agents SDK](https://github.com/openai/openai-agents-python). To run this:
@@ -96,3 +72,27 @@ uvx --with jupytercad-mcp jupytercad-mcp streamable-http
 ```
 
 You can then run [examples/openai_agents_client.py](examples/openai_agents_client.py) with `TRANSPORT = "streambable-http"`.
+
+## Tools
+
+The following tools are available:
+
+- **get_current_cad_design**: Read the current content of a document (helpful for understanding the current state of a
+  JCAD file before modifying it).
+- **remove**: Remove an object from the document.
+- **rename**: Rename an object in the document.
+- **add_annotation**: Add an annotation to the document.
+- **remove_annotation**: Remove an annotation from the document.
+- **add_occ_shape**: Add an OpenCascade TopoDS shape to the document.
+- **add_box**: Add a box to the document.
+- **add_cone**: Add a cone to the document.
+- **add_cylinder**: Add a cylinder to the document.
+- **add_sphere**: Add a sphere to the document.
+- **add_torus**: Add a torus to the document.
+- **cut**: Apply a cut boolean operation between two objects.
+- **fuse**: Apply a union boolean operation between two objects.
+- **intersect**: Apply an intersection boolean operation between two objects.
+- **chamfer**: Apply a chamfer operation on an object.
+- **fillet**: Apply a fillet operation on an object.
+- **set_visible**: Sets the visibility of an object.
+- **set_color**: Sets the color of an object.
