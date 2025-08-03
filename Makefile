@@ -37,11 +37,11 @@ mcp-inspector:                                      ## ToDo
 setup-examples-env:                                 ## Todo
 	uv sync --extra=examples
 
-mlflow-ui: setup-examples-env                       ## ToDo
+mlflow-ui:                                          ## ToDo
 	uv run mlflow ui
 
 jupyter-lab:                                        ## ToDo
 	cd examples && uv run jupyter lab
 
-example-openai-agents-client: setup-examples-env    ## Todo
+example-openai-agents-client:                       ## Todo
 	uv run python examples/openai_agents_client.py

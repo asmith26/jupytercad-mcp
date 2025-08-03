@@ -1,6 +1,7 @@
 """An example of how to use the JupyterCAD MCP server with the openai-agents library."""
 
 import asyncio
+import sys
 from pathlib import Path
 
 from agents import Agent, Runner, run_demo_loop, trace
@@ -20,10 +21,8 @@ def get_mcp_server() -> MCPServer:
         return MCPServerStdio(
             name="jupytercad-mcp-stdio",
             params={
-                "command": "uv",
-                "args": ["run", "python", "../src/jupytercad_mcp/server.py"],
-                #     "command": "uvx", todo
-                #     "args": ["--with", "jupytercad-mcp", "jupytercad-mcp"],
+                "command": "uvx",
+                "args": ["--with", "jupytercad-mcp", "jupytercad-mcp"],
             },
             cache_tools_list=True,
         )
@@ -62,7 +61,6 @@ async def main() -> None:
             agent = get_agent(mcp_server=mcp_server)
             if USE_REPL:
                 await run_demo_loop(agent)
-
             else:
                 print("=== EXAMPLE ===")
                 message = "Add a box with width/height/depth 1 and is positioned in the positive y direction."
@@ -72,11 +70,22 @@ async def main() -> None:
 
 
 if __name__ == "__main__":
+    print("\n=== CONFIG ===")
+    print(f"TRANSPORT: {TRANSPORT}")
+    print(f"MODEL: {MODEL.model}")
+    print(f"USE_REPL: {USE_REPL}")
+    print(f"JCAD_PATH: {JCAD_PATH}")
+    print(f"USE_MLFLOW_TRACING: {USE_MLFLOW_TRACING}")
+
     if USE_MLFLOW_TRACING:
+        print("\n    *** WARNING: to use MLFlow tracing you need to first run `mlflow ui` (or `make mlflow-ui`). ***\n")
         import mlflow
         # Use mlflow for tracing
         mlflow.openai.autolog()
         mlflow.set_tracking_uri("http://localhost:5000")
         mlflow.set_experiment("OpenAI-Agents Client")
-
-    asyncio.run(main())
+    print("=== End: CONFIG ===\n")
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        sys.exit(0)
