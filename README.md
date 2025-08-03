@@ -1,20 +1,18 @@
 # jupytercad-mcp
 
-MCP server for JupyterCAD, allowing you to control JupyterCAD with natural language!
+An MCP server for JupyterCAD that allows you to control it using natural language.
 
-Any suggestions/contributions very welcome.
+Suggestions and contributions are very welcome.
 
 ## Usage
 
-As per the example at [examples/openai_agents_client.py](examples/openai_agents_client.py), you should be able to add
-this server to a MCP client in the usual way with a command like: 
+The default transport mechanism is [`stdio`](https://modelcontextprotocol.io/specification/2025-06-18/basic/transports#stdio). To start the server with `stdio`, use the following command:
 
 ```bash
 uvx --with jupytercad-mcp jupytercad-mcp
 ```
 
-The default transport mechanism is [`stdio`](https://modelcontextprotocol.io/specification/2025-06-18/basic/transports#stdio).
-To use [`streamable-http`](https://modelcontextprotocol.io/specification/2025-06-18/basic/transports#streamable-http) 
+To use the [`streamable-http`](https://modelcontextprotocol.io/specification/2025-06-18/basic/transports#streamable-http) transport, use this command instead:
 
 ```bash
 uvx --with jupytercad-mcp jupytercad-mcp streamable-http
@@ -22,69 +20,57 @@ uvx --with jupytercad-mcp jupytercad-mcp streamable-http
 
 ### Example
 
-An example at [examples/openai_agents_client.py](examples/openai_agents_client.py) has been created using the 
-[OpenAI Agents SDK](https://github.com/openai/openai-agents-python). To run this:
+An example using the [OpenAI Agents SDK](https://github.com/openai/openai-agents-python) is available at [examples/openai_agents_client.py](examples/openai_agents_client.py). To run it, follow these steps:
 
-1. Clone the repo `git clone git@github.com:asmith26/jupytercad-mcp.git` and `cd jupytercad-mcp`
+1.  Clone the repository and navigate into the directory:
+    ```bash
+    git clone git@github.com:asmith26/jupytercad-mcp.git
+    cd jupytercad-mcp
+    ```
 
-2. [Install](https://openai.github.io/openai-agents-python/quickstart/#install-the-agents-sdk) the OpenAI Agents SDK. A 
-   Makefile target exists to help with this: 
+2.  Install the OpenAI Agents SDK. A Makefile target is provided for convenience:
+    ```bash
+    make setup-examples-env
+    ```
 
-```bash
-make setup-examples-env
-```
+3.  In [examples/openai_agents_client.py](examples/openai_agents_client.py#L13), update line 13 to configure a `MODEL` (see [supported models](https://openai.github.io/openai-agents-python/models/)).
 
-3. Within [examples/openai_agents_client.py](examples/openai_agents_client.py#L13), update line 13 to configure a `MODEL`
-   (see [models](https://openai.github.io/openai-agents-python/models/)).
-   
-4. Run Jupyter Lab from the examples directory:
+4.  Run JupyterLab from the project's root directory:
+    ```bash
+    make jupyter-lab
+    ```
 
-```bash
-make jupyter-lab
-```
+5.  In JupyterLab, create a new "CAD file" and rename it to **my_cad_design.jcad**. This file path matches the default [`JCAD_PATH`](examples/openai_agents_client.py#L16) in the example, allowing you to visualise the changes made by the JupyterCAD MCP server.
 
-5. Create a new "CAD file" and rename it to **my_cad_design.jcad**. This matches the default 
-   [`JCAD_PATH`](examples/openai_agents_client.py#L16) defined in the example, and will allow you to visualise the 
-   changes made by the JupyterCAD MCP server.
+6.  (Optional) The OpenAI Agents SDK supports [tracing](https://openai.github.io/openai-agents-python/tracing/) to record events like LLM generations and tool calls. To enable it, set [`USE_MLFLOW_TRACING=True`](examples/openai_agents_client.py#L15) and run the MLflow UI:
+    ```bash
+    make mlflow-ui
+    ```
 
-6. (Optional) The OpenAI Agents SDK includes support for [tracing](https://openai.github.io/openai-agents-python/tracing/),
-   which records events during an agent run (e.g. LLM generations, tool calls, handoffs, guardrails). If you wish to
-   enable this set [`USE_MLFLOW_TRACING=True`](examples/openai_agents_client.py#L15) and run:
-   
-```bash
-make mlflow-ui
-```
+7.  Run the example with the default instruction, "Add a box with width/height/depth 1":
+    ```bash
+    make example-openai-agents-client
+    ```
 
-7. Run the default example with:
+#### Interactive Chat Interface
 
-```bash
-make example-openai-agents-client 
-```
+The example includes an interactive chat interface using the OpenAI Agents SDK's 
+[REPL utility](https://openai.github.io/openai-agents-python/repl/). To enable it, set [`USE_REPL = True`](examples/openai_agents_client.py#L14).
 
-This should follow the example instruction: *"Add a box with width/height/depth 1"*
+#### `streamable-http`
 
-#### Interactive Chat interface
-
-The example also includes an option to enable an interactive chat interface (using the OpenAI Agents SDK's [REPL 
-utility](https://openai.github.io/openai-agents-python/repl/), achieved by setting 
-[`USE_REPL = True`](examples/openai_agents_client.py#L14)).
-
-#### `streambable-http`
-
-To use `streambable-http`, you first need to start the MCP server (e.g. with: 
-
+To use the `streamable-http` transport, first start the MCP server:
 ```bash
 uvx --with jupytercad-mcp jupytercad-mcp streamable-http
 ```
 
-You can then run the example with [`TRANSPORT = "streambable-http"`](examples/openai_agents_client.py#L12).
+Then, run the example with the `TRANSPORT` variable set to `"streamable-http"` in the [client example](examples/openai_agents_client.py#L12).
 
 ## Tools
 
 The following tools are available:
 
-- **get_current_cad_design**: Read the current content of a document (helpful for understanding the current state of a
-  JCAD file before modifying it).
+- **get_current_cad_design**: Reads the current content of the JCAD document.
 - **remove**: Remove an object from the document.
 - **rename**: Rename an object in the document.
 - **add_annotation**: Add an annotation to the document.

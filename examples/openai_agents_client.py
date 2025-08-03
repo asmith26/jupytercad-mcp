@@ -26,7 +26,7 @@ def get_mcp_server() -> MCPServer:
             },
             cache_tools_list=True,
         )
-    elif TRANSPORT == "streambable-http":
+    elif TRANSPORT == "streamable-http":
         return MCPServerStreamableHttp(
             name="jupytercad-mcp-streamable-http",
             params={
