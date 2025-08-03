@@ -1,0 +1,47 @@
+[project]
+name = "jupytercad-mcp"
+version = "0.1.0a0"
+authors = [{ name = "asmith26"}]
+description = "An MCP server for JupyterCAD that allows you to control it using natural language."
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+license = "Apache-2.0"
+keywords = ["jupytercad", "jupyterlab", "mcp", "computer-aided design", "cad"]
+dependencies = [
+    "jupytercad>=3.1.5",
+    "mcp>=1.12.3",
+]
+
+[project.urls]
+Homepage = "https://github.com/asmith26/jupytercad-mcp"
+
+[dependency-groups]
+dev = [
+    "bandit>=1.8.6",
+    "mypy>=1.17.1",
+    "pytest>=8.4.1",
+    "pytest-asyncio>=1.1.0",
+    "pytest-cov>=6.2.1",
+    "pytest-xdist>=3.8.0",
+    "ruff>=0.12.7",
+]
+
+[project.optional-dependencies]
+examples = [
+    "mlflow>=3.1.4",
+    "openai-agents[litellm]>=0.2.4",
+]
+
+[project.scripts]
+jupytercad-mcp = "jupytercad_mcp.server:main"
+
+[build-system]
+requires = ["uv_build>=0.8.4,<0.9.0"]
+build-backend = "uv_build"
