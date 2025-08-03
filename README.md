@@ -34,21 +34,22 @@ An example at [examples/openai_agents_client.py](examples/openai_agents_client.p
 make setup-examples-env
 ```
 
-3. Within [examples/openai_agents_client.py](examples/openai_agents_client.py#L13) update line 13 to configure a `MODEL`
-   (see [models](https://openai.github.io/openai-agents-python/models/).
+3. Within [examples/openai_agents_client.py](examples/openai_agents_client.py#L13), update line 13 to configure a `MODEL`
+   (see [models](https://openai.github.io/openai-agents-python/models/)).
    
-4. Run jupyter-lab from the examples directory
+4. Run Jupyter Lab from the examples directory:
 
 ```bash
 make jupyter-lab
 ```
 
-5. Launch a new "CAD file" and rename it to **my_cad_design.jcad**. This matches the default `JCAD_PATH` defined in the 
-   example, and will allow you to visualise the changes made by the JupyterCAD MCP server.
+5. Create a new "CAD file" and rename it to **my_cad_design.jcad**. This matches the default 
+   [`JCAD_PATH`](examples/openai_agents_client.py#L16) defined in the example, and will allow you to visualise the 
+   changes made by the JupyterCAD MCP server.
 
 6. (Optional) The OpenAI Agents SDK includes support for [tracing](https://openai.github.io/openai-agents-python/tracing/),
    which records events during an agent run (e.g. LLM generations, tool calls, handoffs, guardrails). If you wish to
-   enable this set `USE_MLFLOW_TRACING=True` and run:
+   enable this set [`USE_MLFLOW_TRACING=True`](examples/openai_agents_client.py#L15) and run:
    
 ```bash
 make mlflow-ui
@@ -62,8 +63,13 @@ make example-openai-agents-client
 
 This should follow the example instruction: *"Add a box with width/height/depth 1"*
 
-The example also includes an option to enable an interactive chat-like interface (using the OpenAI Agents SDK's [REPL 
-utility](https://openai.github.io/openai-agents-python/repl/), achieved by setting `USE_REPL = True`).
+#### Interactive Chat interface
+
+The example also includes an option to enable an interactive chat interface (using the OpenAI Agents SDK's [REPL 
+utility](https://openai.github.io/openai-agents-python/repl/), achieved by setting 
+[`USE_REPL = True`](examples/openai_agents_client.py#L14)).
+
+#### `streambable-http`
 
 To use `streambable-http`, you first need to start the MCP server (e.g. with: 
 
@@ -71,7 +77,7 @@ To use `streambable-http`, you first need to start the MCP server (e.g. with:
 uvx --with jupytercad-mcp jupytercad-mcp streamable-http
 ```
 
-You can then run [examples/openai_agents_client.py](examples/openai_agents_client.py) with `TRANSPORT = "streambable-http"`.
+You can then run the example with [`TRANSPORT = "streambable-http"`](examples/openai_agents_client.py#L12).
 
 ## Tools
 
