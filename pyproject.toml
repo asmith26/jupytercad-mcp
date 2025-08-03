@@ -1,8 +1,8 @@
 [project]
 name = "jupytercad-mcp"
-version = "0.1.0"
+version = "0.1.0a0"
 authors = [{ name = "asmith26"}]
-description = "MCP server for JupyterCAD, to control it with natural language."
+description = "MCP server for JupyterCAD, allowing you to control JupyterCAD with natural language!"
 readme = "README.md"
 requires-python = ">=3.10"
 classifiers = [

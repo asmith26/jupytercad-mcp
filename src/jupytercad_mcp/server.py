@@ -88,7 +88,7 @@ expose_method(cls=CadDocument, method_name="set_color")  # todo add docstring?
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Start an MCP server for JupyterCAD.")
+    parser = argparse.ArgumentParser(description="Start a MCP server for JupyterCAD.")
     parser.add_argument(
         "transport",
         nargs="?",

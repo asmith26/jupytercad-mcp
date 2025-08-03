@@ -31,17 +31,17 @@ package-publish:                                    ## Publish Python package to
 	uv publish
 
 # === CUSTOM COMMANDS ===
-mcp-inspector:                                      ## ToDo
+mcp-inspector:                                      ## Run the MCP inspector
 	npx @modelcontextprotocol/inspector uv run python src/jupytercad_mcp/server.py
 
-setup-examples-env:                                 ## Todo
+setup-examples-env:                                 ## Setup environment for examples
 	uv sync --extra=examples
 
-mlflow-ui:                                          ## ToDo
+mlflow-ui:                                          ## Run the MLflow UI
 	uv run mlflow ui
 
-jupyter-lab:                                        ## ToDo
+jupyter-lab:                                        ## Run Jupyter Lab from the examples directory
 	cd examples && uv run jupyter lab
 
-example-openai-agents-client:                       ## Todo
+example-openai-agents-client:                       ## Run the OpenAI agents client example
 	uv run python examples/openai_agents_client.py
