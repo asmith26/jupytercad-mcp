@@ -6,6 +6,8 @@ Suggestions and contributions are very welcome.
 
 ## Usage
 
+> NOTE: the `jupytercad` dependency currently requires [this PR](https://github.com/jupytercad/JupyterCAD/pull/772) from JupyterCAD.
+
 The default transport mechanism is [`stdio`](https://modelcontextprotocol.io/specification/2025-06-18/basic/transports#stdio). To start the server with `stdio`, use the following command:
 
 ```bash

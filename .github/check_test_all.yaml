@@ -7,6 +7,9 @@ on:
 jobs:
   check_test_all:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.10', '3.11', '3.12', '3.13']
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -14,6 +17,7 @@ jobs:
       - name: Setup uv
         uses: astral-sh/setup-uv@v6
         with:
+          python-version: ${{ matrix.python-version }}
           enable-cache: true
           cache-dependency-glob: "uv.lock"
 
