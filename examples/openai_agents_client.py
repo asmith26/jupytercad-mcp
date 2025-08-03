@@ -1,17 +1,18 @@
 """An example of how to use the JupyterCAD MCP server with the openai-agents library."""
 
 import asyncio
+from pathlib import Path
 
-import mlflow
 from agents import Agent, Runner, run_demo_loop, trace
 from agents.mcp import MCPServer, MCPServerStdio, MCPServerStreamableHttp
 from agents.model_settings import ModelSettings
 
 # CONFIG
 TRANSPORT = "stdio"
-MODEL = # see https://openai.github.io/openai-agents-python/models/
-USE_REPL = True
-JCAD_PATH =
+# MODEL = # see https://openai.github.io/openai-agents-python/models/
+USE_REPL = False
+USE_MLFLOW_TRACING = False
+JCAD_PATH = Path(__file__).parent / "my_cad_design.jcad"
 
 
 def get_mcp_server() -> MCPServer:
@@ -34,6 +35,7 @@ def get_mcp_server() -> MCPServer:
             },
             cache_tools_list=True,
         )
+    raise ValueError(f"Unknown transport: {TRANSPORT}")
 
 
 def get_agent(mcp_server: MCPServer) -> Agent:
@@ -50,7 +52,7 @@ def get_agent(mcp_server: MCPServer) -> Agent:
     """,
         mcp_servers=[mcp_server],
         model_settings=ModelSettings(tool_choice="required"),
-        model=MODEL
+        model=MODEL,
     )
 
 
@@ -70,9 +72,11 @@ async def main() -> None:
 
 
 if __name__ == "__main__":
-    # Use mlflow for tracing
-    mlflow.openai.autolog()
-    mlflow.set_tracking_uri("http://localhost:5000")
-    mlflow.set_experiment("OpenAI-Agents Client")
+    if USE_MLFLOW_TRACING:
+        import mlflow
+        # Use mlflow for tracing
+        mlflow.openai.autolog()
+        mlflow.set_tracking_uri("http://localhost:5000")
+        mlflow.set_experiment("OpenAI-Agents Client")
 
     asyncio.run(main())

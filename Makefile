@@ -1,47 +1,47 @@
-help:                                            ## Show help docs
+help:                                               ## Show help docs
 	@sed -ne '/@sed/!s/## //p' $(MAKEFILE_LIST)
 
 # === CI COMMANDS ===
-check-types:                                     ## Check static typing
+check-types:                                        ## Check static typing
 	uv run mypy --strict --ignore-missing-imports --implicit-optional --allow-untyped-decorators --disable-error-code import-untyped --disable-error-code no-redef src
 	# todo https://github.com/astral-sh/ty
 
-check-style:                                     ## Check formatting
+check-style:                                        ## Check formatting
 	uv run ruff check --select I src tests
 	uv run ruff format --check --line-length=120 src tests
 
-fix-style:                                       ## Fix formatting
+fix-style:                                          ## Fix formatting
 	uv run ruff check --select I --fix src tests
 	uv run ruff format --line-length=120 src tests
 
-sast:                                            ## Run static application security testing
+sast:                                               ## Run static application security testing
 	uv run bandit --recursive src
 
-run-tests:                                       ## Run tests with coverage and report
+run-tests:                                          ## Run tests with coverage and report
 	uv run pytest --numprocesses=auto --cov-report=term-missing --cov-report=html --cov-fail-under=95 --cov src
 
-check-static-all: check-types check-style sast   ## Run all static checks
+check-static-all: check-types check-style sast      ## Run all static checks
 
-check-test-all: check-static-all run-tests       ## Run all checks/tests
+check-test-all: check-static-all run-tests          ## Run all checks/tests
 
-package-build:                                   ## Build Python package
+package-build:                                      ## Build Python package
 	uv build
 
-package-publish:                                 ## Publish Python package to PyPI
+package-publish:                                    ## Publish Python package to PyPI
 	uv publish
 
 # === CUSTOM COMMANDS ===
-mcp-inspector:                                   ## ToDo
+mcp-inspector:                                      ## ToDo
 	npx @modelcontextprotocol/inspector uv run python src/jupytercad_mcp/server.py
 
-setup-examples-env:                              ## Todo
-   uv sync --extra=examples
+setup-examples-env:                                 ## Todo
+	uv sync --extra=examples
 
-mlflow-ui: setup-examples-env                    ## ToDo
-    uv run mlflow ui
+mlflow-ui: setup-examples-env                       ## ToDo
+	uv run mlflow ui
 
-jupyter-cad:                                     ## ToDo
-    uv run jupyter cad
+jupyter-lab:                                        ## ToDo
+	cd examples && uv run jupyter lab
 
-run-openai-agents-client: setup-examples-env     ## Todo
-    uv run python examples/openai_agents_client.py
+example-openai-agents-client: setup-examples-env    ## Todo
+	uv run python examples/openai_agents_client.py
