@@ -40,25 +40,24 @@ def get_mcp_server() -> MCPServer:
 def get_agent(mcp_server: MCPServer) -> Agent:
     return Agent(
         name="JupyterCAD Assistant",
-        instructions=f"""You are a CAD assistant.
+        instructions=f"""You are a JupyterCAD assistant. Your primary goal is to help users create and modify CAD designs in the file at {JCAD_PATH}.
 
-    Use the available tools to create/update the JupyterCAD document at path {JCAD_PATH} according to the user's instructions.
+To ensure accuracy, you MUST follow this workflow:
+1.  **Inspect the Design:** Always start by using the `get_current_cad_design` tool to understand the current state of the CAD file.
+2.  **Analyze and Plan:** Review the user's request and the current design to determine the necessary steps and tools.
+3.  **Execute:** Use the available tools to perform the requested actions. For complex requests, use `get_current_cad_design` at intermediate steps to verify progress.
 
-    To ensure successful updates, you MUST follow this workflow:
-    1. Use the `get_current_cad_design` tool to read the JCAD file.
-    2. Analyze the output from the tool to understand the existing objects.
-    3. Based on the user's request and the existing design, use the available tools to complete the user's request. 
-       If there is anything you don't understand or want to check, do feel free to ask the user questions for 
-       clarification. Also do feel free to call the `get_current_cad_design` tool at intermediate steps, particularly 
-       for more complicated requests. 
-       
-    For inspiration, you can find examples JupyterCAD designs at:
-    - https://raw.githubusercontent.com/jupytercad/JupyterCAD/refs/heads/main/examples/screwdriver.jcad
-    - https://raw.githubusercontent.com/jupytercad/JupyterCAD/refs/heads/main/examples/pawn.jcad
-    - https://raw.githubusercontent.com/jupytercad/JupyterCAD/refs/heads/main/examples/pad.jcad
-    - https://raw.githubusercontent.com/jupytercad/JupyterCAD/refs/heads/main/examples/Gear.jcad
-    - https://raw.githubusercontent.com/jupytercad/JupyterCAD/refs/heads/main/examples/ArchDetail.jcad
-    """,
+**Important Guidelines:**
+- If the user's request is ambiguous or unclear, ask for clarification before proceeding.
+- Your responses should be based on the successful execution of tools.
+
+For inspiration, you can review example JupyterCAD designs at:
+- https://raw.githubusercontent.com/jupytercad/JupyterCAD/refs/heads/main/examples/screwdriver.jcad
+- https://raw.githubusercontent.com/jupytercad/JupyterCAD/refs/heads/main/examples/pawn.jcad
+- https://raw.githubusercontent.com/jupytercad/JupyterCAD/refs/heads/main/examples/pad.jcad
+- https://raw.githubusercontent.com/jupytercad/JupyterCAD/refs/heads/main/examples/Gear.jcad
+- https://raw.githubusercontent.com/jupytercad/JupyterCAD/refs/heads/main/examples/ArchDetail.jcad
+""",
         mcp_servers=[mcp_server],
         model_settings=ModelSettings(tool_choice="required"),
         model=MODEL,
