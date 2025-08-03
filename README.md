@@ -14,8 +14,11 @@ uvx --with jupytercad-mcp jupytercad-mcp
 ```
 
 The default transport mechanism is [`stdio`](https://modelcontextprotocol.io/specification/2025-06-18/basic/transports#stdio).
-To use the [`streamable-http`](https://modelcontextprotocol.io/specification/2025-06-18/basic/transports#streamable-http) 
-run with`uvx --with jupytercad-mcp jupytercad-mcp streamable-http`.
+To use [`streamable-http`](https://modelcontextprotocol.io/specification/2025-06-18/basic/transports#streamable-http) 
+
+```bash
+uvx --with jupytercad-mcp jupytercad-mcp streamable-http
+```
 
 ### Tools
 
@@ -51,7 +54,7 @@ An example at [examples/openai_agents_client.py](examples/openai_agents_client.p
 2. [Install](https://openai.github.io/openai-agents-python/quickstart/#install-the-agents-sdk) the OpenAI Agents SDK. A 
    Makefile target exists to help with this: 
 
-   ```bash
+```bash
 make setup-examples-env
 ```
 
@@ -60,7 +63,7 @@ make setup-examples-env
    
 4. Run jupyter-lab from the examples directory
 
-   ```bash
+```bash
 make jupyter-lab
 ```
 
@@ -71,13 +74,13 @@ make jupyter-lab
    which records events during an agent run (e.g. LLM generations, tool calls, handoffs, guardrails). If you wish to
    enable this set `USE_MLFLOW_TRACING=True` and run:
    
-   ```bash
+```bash
 make mlflow-ui
 ```
 
 7. Run the default example with:
 
-   ```bash
+```bash
 make example-openai-agents-client 
 ```
 
