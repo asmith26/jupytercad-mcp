@@ -25,7 +25,7 @@ uvx --with jupytercad-mcp jupytercad-mcp streamable-http
 An example at [examples/openai_agents_client.py](examples/openai_agents_client.py) has been created using the 
 [OpenAI Agents SDK](https://github.com/openai/openai-agents-python). To run this:
 
-1. Clone the repo `git clone git@github.com:asmith26/jupytercad-mcp.git` and `cd jupytercad-mcp`.
+1. Clone the repo `git clone git@github.com:asmith26/jupytercad-mcp.git` and `cd jupytercad-mcp`
 
 2. [Install](https://openai.github.io/openai-agents-python/quickstart/#install-the-agents-sdk) the OpenAI Agents SDK. A 
    Makefile target exists to help with this: 
@@ -34,7 +34,7 @@ An example at [examples/openai_agents_client.py](examples/openai_agents_client.p
 make setup-examples-env
 ```
 
-3. Within [examples/openai_agents_client.py](examples/openai_agents_client.py) update line 13 to configure a `MODEL`
+3. Within [examples/openai_agents_client.py](examples/openai_agents_client.py#L13) update line 13 to configure a `MODEL`
    (see [models](https://openai.github.io/openai-agents-python/models/).
    
 4. Run jupyter-lab from the examples directory
