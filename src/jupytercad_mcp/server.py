@@ -66,8 +66,8 @@ def expose_method(cls: Type[Any], method_name: str) -> Callable[..., Any]:
 
 
 # Add CadDocument tools
-expose_method(cls=CadDocument, method_name="remove")  # todo add docstring?
-expose_method(cls=CadDocument, method_name="rename")  # todo add docstring?
+expose_method(cls=CadDocument, method_name="remove")
+expose_method(cls=CadDocument, method_name="rename")
 expose_method(cls=CadDocument, method_name="add_annotation")
 expose_method(cls=CadDocument, method_name="remove_annotation")
 # expose_method(cls=CadDocument, method_name="add_step_file")  # omitted for simplicity (has `path` parameter)
@@ -83,8 +83,8 @@ expose_method(cls=CadDocument, method_name="intersect")
 expose_method(cls=CadDocument, method_name="chamfer")
 expose_method(cls=CadDocument, method_name="fillet")
 # expose_method(cls=CadDocument, method_name="extrusion")  todo check
-expose_method(cls=CadDocument, method_name="set_visible")  # todo add docstring?
-expose_method(cls=CadDocument, method_name="set_color")  # todo add docstring?
+expose_method(cls=CadDocument, method_name="set_visible")
+expose_method(cls=CadDocument, method_name="set_color")
 
 
 def main() -> None:

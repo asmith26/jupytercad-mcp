@@ -19,6 +19,27 @@ run with`uvx --with jupytercad-mcp jupytercad-mcp streamable-http`.
 
 ### Tools
 
+The following tools are available:
+
+- **get_current_cad_design**: Read the current content of a document (helpful for understanding the current state of a
+  JCAD file before modifying it).
+- **remove**: Remove an object from the document.
+- **rename**: Rename an object in the document.
+- **add_annotation**: Add an annotation to the document.
+- **remove_annotation**: Remove an annotation from the document.
+- **add_occ_shape**: Add an OpenCascade TopoDS shape to the document.
+- **add_box**: Add a box to the document.
+- **add_cone**: Add a cone to the document.
+- **add_cylinder**: Add a cylinder to the document.
+- **add_sphere**: Add a sphere to the document.
+- **add_torus**: Add a torus to the document.
+- **cut**: Apply a cut boolean operation between two objects.
+- **fuse**: Apply a union boolean operation between two objects.
+- **intersect**: Apply an intersection boolean operation between two objects.
+- **chamfer**: Apply a chamfer operation on an object.
+- **fillet**: Apply a fillet operation on an object.
+- **set_visible**: Sets the visibility of an object.
+- **set_color**: Sets the color of an object.
 
 ## Example
 
