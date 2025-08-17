@@ -57,7 +57,7 @@ An example using the [OpenAI Agents SDK](https://github.com/openai/openai-agents
 #### Interactive Chat Interface
 
 The example includes an interactive chat interface using the OpenAI Agents SDK's 
-[REPL utility](https://openai.github.io/openai-agents-python/repl/). To enable it, set [`USE_REPL = True`](examples/openai_agents_client.py#L14).
+[REPL utility](https://openai.github.io/openai-agents-python/repl/). To enable it, set [`USE_REPL=True`](examples/openai_agents_client.py#L14).
 
 #### `streamable-http`
 
