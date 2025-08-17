@@ -2,6 +2,8 @@
 
 An MCP server for JupyterCAD that allows you to control it using natural language.
 
+https://github.com/user-attachments/assets/7edb31b2-2c80-4096-9d9c-048ae27c54e7
+
 Suggestions and contributions are very welcome.
 
 ## Usage
