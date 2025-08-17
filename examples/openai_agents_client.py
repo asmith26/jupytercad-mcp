@@ -1,14 +1,14 @@
 """An example of how to use the JupyterCAD MCP server with the openai-agents library."""
 
 import asyncio
-import sys
 from pathlib import Path
 
-from agents import Agent, Runner, run_demo_loop, trace
+from agents import Agent, Runner, run_demo_loop, trace, set_trace_processors
 from agents.mcp import MCPServer, MCPServerStdio, MCPServerStreamableHttp
 from agents.model_settings import ModelSettings
 
 # CONFIG
+set_trace_processors([])  # disable OpenAI tracing
 TRANSPORT = "stdio"
 # MODEL = # see https://openai.github.io/openai-agents-python/models/
 USE_REPL = False
@@ -40,24 +40,15 @@ def get_mcp_server() -> MCPServer:
 def get_agent(mcp_server: MCPServer) -> Agent:
     return Agent(
         name="JupyterCAD Assistant",
-        instructions=f"""You are a JupyterCAD assistant. Your primary goal is to help users create and modify CAD designs in the file at {JCAD_PATH}.
+        instructions=f"""You are a JupyterCAD assistant. Your primary goal is to help users create and modify CAD designs in the file located at path={JCAD_PATH}, using the tools provided by the MCP server.
 
-To ensure accuracy, you MUST follow this workflow:
-1.  **Inspect the Design:** Always start by using the `get_current_cad_design` tool to understand the current state of the CAD file.
-2.  **Analyze and Plan:** Review the user's request and the current design to determine the necessary steps and tools.
-3.  **Execute:** Use the available tools to perform the requested actions. For complex requests, use `get_current_cad_design` at intermediate steps to verify progress.
-
-**Important Guidelines:**
-- If the user's request is ambiguous or unclear, ask for clarification before proceeding.
-- Your responses should be based on the successful execution of tools.
-
-For inspiration, you can review example JupyterCAD designs at:
-- https://raw.githubusercontent.com/jupytercad/JupyterCAD/refs/heads/main/examples/screwdriver.jcad
-- https://raw.githubusercontent.com/jupytercad/JupyterCAD/refs/heads/main/examples/pawn.jcad
-- https://raw.githubusercontent.com/jupytercad/JupyterCAD/refs/heads/main/examples/pad.jcad
-- https://raw.githubusercontent.com/jupytercad/JupyterCAD/refs/heads/main/examples/Gear.jcad
-- https://raw.githubusercontent.com/jupytercad/JupyterCAD/refs/heads/main/examples/ArchDetail.jcad
-""",
+    You MUST:
+    1. Think about the user's request: Think about the object the user has requested a JupyterCAD design for, and think about what tools/shapes/steps you can take to achieve the user's request.
+    2. Execute with Verification: Use the available tools to perform the requested actions. Regularly use `get_current_cad_design` at intermediate steps to verify progress.
+    3. **NEVER Fuse the Entire Object:** To keep the design easy to edit, group objects that correspond to individual parts together and give them meaningful names. Never fuse all objects into a single entity.
+    4. Ensure All Parts Are Visible: Before finishing, confirm that every part of the object is visible.
+    5. **NEVER set Color to `null`:** Use the string `"#808080"` for the default color of an object. (I repeat: NEVER use `null` for Color.)
+    """,
         mcp_servers=[mcp_server],
         model_settings=ModelSettings(tool_choice="required"),
         model=MODEL,
@@ -94,7 +85,4 @@ if __name__ == "__main__":
         mlflow.set_tracking_uri("http://localhost:5000")
         mlflow.set_experiment("OpenAI-Agents Client")
     print("=== End: CONFIG ===\n")
-    try:
-        asyncio.run(main())
-    except KeyboardInterrupt:
-        sys.exit(0)
+    asyncio.run(main())

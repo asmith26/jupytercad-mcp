@@ -30,7 +30,7 @@ def test_get_current_cad_design(tmp_path):
 def test_expose_method(mock_cad_document):
     # Mock CadDocument and its methods
     mock_doc_instance = MagicMock()
-    mock_cad_document.load.return_value = mock_doc_instance
+    mock_cad_document.import_from_file.return_value = mock_doc_instance
 
     # Mock a method to be exposed
     mock_method = MagicMock(__name__="test_method", __doc__="Test docstring")
@@ -47,7 +47,7 @@ def test_expose_method(mock_cad_document):
     wrapped_method(path, **kwargs)
 
     # Assertions
-    mock_cad_document.load.assert_called_once_with(path)
+    mock_cad_document.import_from_file.assert_called_once_with(path)
     mock_doc_instance.test_method.assert_called_once_with(**kwargs)
     mock_doc_instance.save.assert_called_once_with(path)
 

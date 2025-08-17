@@ -1,6 +1,6 @@
 [project]
 name = "jupytercad-mcp"
-version = "0.1.0a0"
+version = "0.1.0a1"
 authors = [{ name = "asmith26"}]
 description = "An MCP server for JupyterCAD that allows you to control it using natural language."
 readme = "README.md"

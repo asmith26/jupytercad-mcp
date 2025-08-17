@@ -2,6 +2,8 @@
 
 An MCP server for JupyterCAD that allows you to control it using natural language.
 
+https://github.com/user-attachments/assets/7edb31b2-2c80-4096-9d9c-048ae27c54e7
+
 Suggestions and contributions are very welcome.
 
 ## Usage
@@ -57,7 +59,7 @@ An example using the [OpenAI Agents SDK](https://github.com/openai/openai-agents
 #### Interactive Chat Interface
 
 The example includes an interactive chat interface using the OpenAI Agents SDK's 
-[REPL utility](https://openai.github.io/openai-agents-python/repl/). To enable it, set [`USE_REPL = True`](examples/openai_agents_client.py#L14).
+[REPL utility](https://openai.github.io/openai-agents-python/repl/). To enable it, set [`USE_REPL=True`](examples/openai_agents_client.py#L14).
 
 #### `streamable-http`
 
