@@ -28,8 +28,8 @@ def expose_method(cls: Type[Any], method_name: str) -> Callable[..., Any]:
 
     @wraps(method)
     def _wrapper(path: str, **kwargs: Any) -> None:
-        # Load current .jcad document
-        doc = CadDocument.load(path)
+        # Import current .jcad document
+        doc = CadDocument.import_from_file(path)
 
         # Update doc
         getattr(doc, method_name)(**kwargs)
