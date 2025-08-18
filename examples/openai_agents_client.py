@@ -25,6 +25,7 @@ def get_mcp_server() -> MCPServer:
                 "args": ["--with", "jupytercad-mcp", "jupytercad-mcp"],
             },
             cache_tools_list=True,
+            client_session_timeout_seconds=30,  # timeout allows for jupytercad-mcp to download/install
         )
     elif TRANSPORT == "streamable-http":
         return MCPServerStreamableHttp(
@@ -33,6 +34,7 @@ def get_mcp_server() -> MCPServer:
                 "url": "http://localhost:8000/mcp",
             },
             cache_tools_list=True,
+            client_session_timeout_seconds=30,  # timeout allows for jupytercad-mcp to download/install
         )
     raise ValueError(f"Unknown transport: {TRANSPORT}")
 
