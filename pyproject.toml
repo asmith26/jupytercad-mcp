@@ -1,6 +1,6 @@
 [project]
 name = "jupytercad-mcp"
-version = "0.1.0a1"
+version = "0.1.0"
 authors = [{ name = "asmith26"}]
 description = "An MCP server for JupyterCAD that allows you to control it using natural language."
 readme = "README.md"
@@ -15,8 +15,8 @@ classifiers = [
 license = "Apache-2.0"
 keywords = ["jupytercad", "jupyterlab", "mcp", "computer-aided design", "cad"]
 dependencies = [
-    "jupytercad>=3.1.5",
-    "mcp>=1.12.3",
+    "jupytercad>=3.1.6",
+    "mcp>=1.13.0",
 ]
 
 [project.urls]
