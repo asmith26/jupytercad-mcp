@@ -2169,7 +2169,7 @@ wheels = [
 
 [[package]]
 name = "jupytercad-mcp"
-version = "0.1.1a0"
+version = "0.1.1a2"
 source = { editable = "." }
 dependencies = [
     { name = "fastmcp" },

@@ -4,7 +4,7 @@ from functools import wraps
 from typing import Any, Callable, Type, get_type_hints
 
 from jupytercad import CadDocument
-from mcp.server.fastmcp import FastMCP
+from fastmcp import FastMCP
 
 
 def get_mcp_server()-> FastMCP:
