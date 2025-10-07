@@ -4,11 +4,11 @@ from functools import wraps
 from typing import Any, Callable, Type, get_type_hints
 
 from jupytercad import CadDocument
-from fastmcp import FastMCP
+from mcp.server.fastmcp import FastMCP
 
 
 def get_mcp_server()-> FastMCP:
-    mcp = FastMCP(name="JupyterCAD MCP Server")
+    mcp = FastMCP(name="JupyterCAD MCP Server", stateless_http=True)
 
     @mcp.tool()
     def get_current_cad_design(path: str) -> str:

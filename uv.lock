@@ -2169,11 +2169,11 @@ wheels = [
 
 [[package]]
 name = "jupytercad-mcp"
-version = "0.1.1a2"
+version = "0.1.1a3"
 source = { editable = "." }
 dependencies = [
-    { name = "fastmcp" },
     { name = "jupytercad" },
+    { name = "mcp" },
 ]
 
 [package.optional-dependencies]
@@ -2195,8 +2195,8 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "fastmcp", specifier = "~=2.10.2" },
     { name = "jupytercad", specifier = ">=3.1.6" },
+    { name = "mcp", specifier = ">=1.16.0" },
     { name = "mlflow", marker = "extra == 'examples'", specifier = ">=3.2.0" },
     { name = "openai-agents", extras = ["litellm"], marker = "extra == 'examples'", specifier = ">=0.2.11" },
 ]
