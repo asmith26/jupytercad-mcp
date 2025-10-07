@@ -1,128 +1,137 @@
-import inspect
+import json
+import sys
 from unittest.mock import MagicMock, patch
 
 import pytest
 from jupytercad import CadDocument
+from mcp.server.fastmcp import FastMCP
 
-from jupytercad_mcp.server import (
-    expose_method,
-    get_current_cad_design,
-    main,
-    mcp,
-)
+from jupytercad_mcp.server import get_mcp_server, main
+
+
+def test_get_mcp_server():
+    """
+    Test that get_mcp_server returns a FastMCP instance
+    and that the expected tools are registered.
+    """
+    mcp = get_mcp_server()
+    assert isinstance(mcp, FastMCP)
+
+    # Check that the server has the expected name
+    assert mcp.name == "JupyterCAD MCP Server"
+
+    tool_names = [tool.name for tool in mcp._tool_manager.list_tools()]
+
+    # Check that the 'get_current_cad_design' tool is registered
+    assert "get_current_cad_design" in tool_names
+
+    # Check that all the exposed CadDocument methods are registered as tools
+    exposed_methods = [
+        "remove",
+        "rename",
+        "add_annotation",
+        "remove_annotation",
+        "add_step_file",
+        "add_occ_shape",
+        "add_box",
+        "add_cone",
+        "add_cylinder",
+        "add_sphere",
+        "add_torus",
+        "cut",
+        "fuse",
+        "intersect",
+        "chamfer",
+        "fillet",
+        "set_visible",
+        "set_color",
+    ]
+    for method_name in exposed_methods:
+        assert method_name in tool_names
 
 
 def test_get_current_cad_design(tmp_path):
-    # Create a dummy file
-    file_path = tmp_path / "test.jcad"
-    file_content = '{"objects": []}'
-    with open(file_path, "w") as f:
-        f.write(file_content)
+    """
+    Test the get_current_cad_design tool.
+    """
+    mcp = get_mcp_server()
+    get_current_cad_design_tool = next(
+        tool for tool in mcp._tool_manager.list_tools() if tool.name == "get_current_cad_design"
+    )
 
-    # Call the tool
-    result = get_current_cad_design(str(file_path))
+    # Create a dummy jcad file
+    doc = CadDocument()
+    jcad_file = tmp_path / "test.jcad"
+    doc.save(str(jcad_file))
+
+    # Run the tool
+    content_from_tool = get_current_cad_design_tool.fn(jcad_path=str(jcad_file))
+    content_from_file = jcad_file.read_text()
 
     # Check the result
-    assert result == file_content
+    assert content_from_tool == content_from_file
+    assert "objects" in json.loads(content_from_tool)
 
 
-@patch("jupytercad_mcp.server.CadDocument")
-def test_expose_method(mock_cad_document):
-    # Mock CadDocument and its methods
-    mock_doc_instance = MagicMock()
-    mock_cad_document.import_from_file.return_value = mock_doc_instance
+def test_exposed_add_box(tmp_path):
+    """
+    Test that an exposed method like add_box works correctly.
+    """
+    mcp = get_mcp_server()
+    add_box_tool = next(tool for tool in mcp._tool_manager.list_tools() if tool.name == "add_box")
 
-    # Mock a method to be exposed
-    mock_method = MagicMock(__name__="test_method", __doc__="Test docstring")
-    mock_method.__globals__ = {}
-    mock_method.__annotations__ = {}  # Add annotations to the mock
-    CadDocument.test_method = mock_method
+    # Create a dummy jcad file
+    doc = CadDocument()
+    jcad_file = tmp_path / "test.jcad"
+    doc.save(str(jcad_file))
 
-    # Expose the method
-    wrapped_method = expose_method(CadDocument, "test_method")
+    # Run the tool
+    box_name = "MyBox"
+    add_box_tool.fn(jcad_path=str(jcad_file), name=box_name, length=1, width=2, height=3)
 
-    # Call the wrapped method
-    path = "/fake/path.jcad"
-    kwargs = {"arg1": "value1", "arg2": 2}
-    wrapped_method(path, **kwargs)
-
-    # Assertions
-    mock_cad_document.import_from_file.assert_called_once_with(path)
-    mock_doc_instance.test_method.assert_called_once_with(**kwargs)
-    mock_doc_instance.save.assert_called_once_with(path)
-
-    # Check signature
-    sig = inspect.signature(wrapped_method)
-    assert "path" in sig.parameters
-    assert "self" not in sig.parameters
-    assert sig.parameters["path"].annotation == str
-
-    # Check docstring
-    assert "Test docstring" in wrapped_method.__doc__
-    assert "Warning: This tool will update the JCAD document" in wrapped_method.__doc__
-
-    # Cleanup the mocked method to avoid affecting other tests
-    del CadDocument.test_method
-
-
-@pytest.mark.asyncio
-async def test_expose_method_signature_real_method():
-    # Test with a real method from CadDocument to ensure signature creation works
-    # We need to unregister the tool if it was registered before to avoid errors
-    if "add_box" in await mcp.list_tools():
-        del (await mcp.list_tools())["add_box"]
-    wrapped_add_box = expose_method(CadDocument, "add_box")
-    sig = inspect.signature(wrapped_add_box)
-
-    assert "path" in sig.parameters
-    assert "self" not in sig.parameters
-    assert "name" in sig.parameters
-    assert "length" in sig.parameters
-    assert "width" in sig.parameters
-    assert "height" in sig.parameters
-    assert sig.parameters["path"].annotation == str
-    assert sig.parameters["length"].annotation == float
-    assert "Warning: This tool will update the JCAD document" in wrapped_add_box.__doc__
-    assert CadDocument.add_box.__doc__ in wrapped_add_box.__doc__
+    # Check if the file was updated
+    updated_doc = CadDocument.import_from_file(str(jcad_file))
+    assert box_name in updated_doc.objects
 
 
 @patch("jupytercad_mcp.server.argparse.ArgumentParser")
-@patch("jupytercad_mcp.server.mcp.run")
-def test_main(mock_mcp_run, mock_arg_parser):
-    # Mock argument parser
+def test_main_default_transport(mock_argparse):
+    """
+    Test that main() uses "stdio" transport by default.
+    """
+    # Mock argument parsing
     mock_args = MagicMock()
     mock_args.transport = "stdio"
-    mock_arg_parser.return_value.parse_args.return_value = mock_args
+    mock_parser = mock_argparse.return_value
+    mock_parser.parse_args.return_value = mock_args
 
-    # Call main
-    main()
+    # Mock server
+    mock_mcp = MagicMock()
+    with patch("jupytercad_mcp.server.get_mcp_server", return_value=mock_mcp) as mock_get_mcp_server:
+        main()
+        mock_get_mcp_server.assert_called_once()
+        mock_mcp.run.assert_called_once_with(transport="stdio")
 
-    # Assertions
-    mock_arg_parser.return_value.add_argument.assert_called_once()
-    mock_arg_parser.return_value.parse_args.assert_called_once()
-    mock_mcp_run.assert_called_once_with(transport="stdio")
 
-
+@pytest.mark.parametrize("transport", ["stdio", "streamable-http"])
 @patch("jupytercad_mcp.server.argparse.ArgumentParser")
-@patch("jupytercad_mcp.server.mcp.run")
-def test_main_http_transport(mock_mcp_run, mock_arg_parser):
-    # Mock argument parser for http transport
+def test_main_transport_args(mock_argparse, transport):
+    """
+    Test that main() correctly uses the "transport" argument.
+    """
+    # Mock argument parsing
+    sys.argv = ["", transport]
     mock_args = MagicMock()
-    mock_args.transport = "streamable-http"
-    mock_arg_parser.return_value.parse_args.return_value = mock_args
+    mock_args.transport = transport
+    mock_parser = mock_argparse.return_value
+    mock_parser.parse_args.return_value = mock_args
 
-    # Call main
-    main()
+    # Mock server
+    mock_mcp = MagicMock()
+    with patch("jupytercad_mcp.server.get_mcp_server", return_value=mock_mcp) as mock_get_mcp_server:
+        main()
+        mock_get_mcp_server.assert_called_once()
+        mock_mcp.run.assert_called_once_with(transport=transport)
 
-    # Assertions
-    mock_mcp_run.assert_called_once_with(transport="streamable-http")
-
-
-@pytest.mark.asyncio
-async def test_mcp_tools_are_registered():
-    # Check if some of the tools are registered in the MCP instance
-    tool_names = [t.name for t in await mcp.list_tools()]
-    assert "get_current_cad_design" in tool_names
-    assert "add_box" in tool_names
-    assert "cut" in tool_names
-    assert "set_color" in tool_names
+    # Clean up sys.argv
+    sys.argv = [""]
