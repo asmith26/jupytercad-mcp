@@ -8,18 +8,18 @@ from mcp.server.fastmcp import FastMCP
 
 
 def get_mcp_server()-> FastMCP:
-    mcp = FastMCP(name="JupyterCAD MCP Server", stateless_http=True)
+    mcp = FastMCP(name="JupyterCAD MCP Server")
 
     @mcp.tool()
-    def get_current_cad_design(path: str) -> str:
+    def get_current_cad_design(jcad_path: str) -> str:
         """Read the current content of a JCAD (JupyterCAD) document.
 
         Use this tool to understand the current state of a JCAD file before modifying it.
 
-        :param path: The path to the JCAD file.
+        :param jcad_path: The path to the JCAD file.
         :return: The current content of the JCAD file.
         """
-        with open(path, "r") as f:
+        with open(jcad_path, "r") as f:
             return f.read()
 
 
@@ -28,19 +28,19 @@ def get_mcp_server()-> FastMCP:
         method = getattr(cls, method_name)
 
         @wraps(method)
-        def _wrapper(path: str, **kwargs: Any) -> None:
+        def _wrapper(jcad_path: str, **kwargs: Any) -> None:
             # Import current .jcad document
-            doc = CadDocument.import_from_file(path)
+            doc = CadDocument.import_from_file(jcad_path)
 
             # Update doc
             getattr(doc, method_name)(**kwargs)
 
             # Write updates to the same filepath
-            doc.save(path)
+            doc.save(jcad_path)
 
         _wrapper.__doc__ = f"""{method.__doc__}
     
-            Warning: This tool will update the JCAD document at the given path.
+            Warning: This tool will update the JCAD document at the given jcad_path.
             To understand the current state of the document, you MUST first use the 'get_current_cad_design' tool.
             """
 
@@ -53,9 +53,9 @@ def get_mcp_server()-> FastMCP:
             if param.name != "self"
         ]
 
-        # Add 'path' to signature
-        path_param = inspect.Parameter("path", inspect.Parameter.POSITIONAL_OR_KEYWORD, annotation=str)
-        new_params.insert(0, path_param)
+        # Add 'jcad_path' to signature
+        jcad_path_param = inspect.Parameter("jcad_path", inspect.Parameter.POSITIONAL_OR_KEYWORD, annotation=str)
+        new_params.insert(0, jcad_path_param)
         _wrapper.__signature__ = orig_sig.replace(  # type: ignore
             parameters=new_params,
             return_annotation=inspect.Signature.empty,  # remove return type (to prevent pydantic errors)
@@ -69,7 +69,7 @@ def get_mcp_server()-> FastMCP:
     expose_method(cls=CadDocument, method_name="rename")
     expose_method(cls=CadDocument, method_name="add_annotation")
     expose_method(cls=CadDocument, method_name="remove_annotation")
-    # expose_method(cls=CadDocument, method_name="add_step_file")  # omitted for simplicity (has `path` parameter)
+    expose_method(cls=CadDocument, method_name="add_step_file")
     expose_method(cls=CadDocument, method_name="add_occ_shape")
     expose_method(cls=CadDocument, method_name="add_box")
     expose_method(cls=CadDocument, method_name="add_cone")
