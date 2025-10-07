@@ -1,13 +1,13 @@
 import argparse
 import inspect
 from functools import wraps
-from typing import Any, Callable, Type, get_type_hints
+from typing import Any, Type, get_type_hints
 
 from jupytercad import CadDocument
 from mcp.server.fastmcp import FastMCP
 
 
-def get_mcp_server()-> FastMCP:
+def get_mcp_server() -> FastMCP:
     mcp = FastMCP(name="JupyterCAD MCP Server")
 
     @mcp.tool()
@@ -22,8 +22,7 @@ def get_mcp_server()-> FastMCP:
         with open(jcad_path, "r") as f:
             return f.read()
 
-
-    def expose_method(cls: Type[Any], method_name: str) -> Callable[..., Any]:
+    def expose_method(cls: Type[Any], method_name: str) -> None:
         """Expose a method of a class as an MCP tool."""
         method = getattr(cls, method_name)
 
