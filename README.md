@@ -6,6 +6,10 @@ https://github.com/user-attachments/assets/7edb31b2-2c80-4096-9d9c-048ae27c54e7
 
 Suggestions and contributions are very welcome.
 
+## Hosted deployment
+
+A hosted deployment is available on [Fronteir AI](https://fronteir.ai/mcp/asmith26-jupytercad-mcp).
+
 ## Usage
 
 The default transport mechanism is [`stdio`](https://modelcontextprotocol.io/specification/2025-06-18/basic/transports#stdio). To start the server with `stdio`, use the following command:
